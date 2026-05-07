@@ -17,10 +17,30 @@ namespace lab04.Controllers
         {
             _context = context;
         }
-        public IActionResult Index()
+        public IActionResult Index(string searchString, int pageNumber = 1)
         {
-            var dsSanPham = _context. Products.Include(x => x.Category).ToList();
-            return View(dsSanPham);
+            int pageSize = 1; 
+
+            var products = _context.Products.Include(x => x.Category).AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                products = products.Where(p => p.Name.Contains(searchString));
+                ViewBag.SearchString = searchString; 
+            }
+
+            int totalItems = products.Count();
+            int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+            var pagedData = products
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            ViewBag.CurrentPage = pageNumber;
+            ViewBag.TotalPages = totalPages;
+
+            return View(pagedData);
         }
         public IActionResult Add()
         {
@@ -73,6 +93,24 @@ namespace lab04.Controllers
                 return RedirectToAction("Index");
             }
             return NotFound();
+        }
+        public IActionResult Statistics()
+        {
+            var stats = _context.Products
+                .Include(p => p.Category)
+                .GroupBy(p => p.Category.Name)
+                .Select(g => new CategoryStatsViewModel
+                {
+                    CategoryName = g.Key,
+                    ProductCount = g.Count(),
+                    MaxPrice = (decimal)g.Max(p => p.Price),
+                    MinPrice = (decimal)g.Min(p => p.Price),
+                    AveragePrice = (decimal)g.Average(p => p.Price),
+                    TotalValue = (decimal)g.Sum(p => p.Price)
+                })
+                .ToList();
+
+            return View(stats);
         }
     }
 }
