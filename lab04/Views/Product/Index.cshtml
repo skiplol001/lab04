@@ -1,0 +1,22 @@
+﻿@model List<Product>
+    <a asp-action="Add" class="btn btn-primary">Add Product</a>
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Category name</th>
+            <th>Action</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Price</td>
+                <td>@item.Category.Name</td>
+                <td>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xoá sản phẩm này @item?.Name?')">Xóa</a>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-success">Sửa</a>
+                </td>
+            </tr>
+        }
+    </table>
