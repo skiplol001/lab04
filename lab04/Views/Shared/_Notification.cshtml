@@ -1,0 +1,16 @@
+﻿<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@if (TempData["success"] != null)
+{
+<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Thành công!',
+             html: `@Html.Raw(TempData["success"])`,
+                showConfirmButton: false,
+                timer: 1500 /* Tự động đóng sau 2.5 giây */
+            });
+        });
+</script>
+}

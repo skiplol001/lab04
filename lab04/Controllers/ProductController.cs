@@ -34,6 +34,7 @@ namespace lab04.Controllers
             {
                 _context.Products.Add(p);
                 _context.SaveChanges();
+                TempData["success"] = "Thêm sản phẩm thành công!";
                 return RedirectToAction("Index");
             }
             ViewBag.LOAI = _context.Categories.Select(x => new SelectListItem { Value = x.Id.ToString(), Text = x.Name });
@@ -55,6 +56,7 @@ namespace lab04.Controllers
             {
                 _context.Products.Update(p);
                 _context.SaveChanges();
+                TempData["success"] = "Sửa sản phẩm thành công!";
                 return RedirectToAction("Index");
             }
             ViewBag.LOAI = _context.Categories.Select(x => new SelectListItem { Value = x.Id.ToString(), Text = x.Name });
@@ -67,6 +69,7 @@ namespace lab04.Controllers
             {
                 _context.Products.Remove(product);
                 _context.SaveChanges();
+                TempData["success"] = "Xoá sản phẩm thành công!";
                 return RedirectToAction("Index");
             }
             return NotFound();
