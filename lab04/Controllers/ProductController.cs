@@ -17,11 +17,11 @@ namespace lab04.Controllers
         {
             _context = context;
         }
-        public IActionResult Index(string searchString, int pageNumber = 1)
+        public IActionResult Index(string searchString, int? categoryId, string sortType, int pageNumber = 1)
         {
-            int pageSize = 1; 
+            int pageSize = 5;
 
-            var products = _context.Products.Include(x => x.Category).AsQueryable();
+            var products = _context.Products.Include(p => p.Category).AsQueryable();
 
             if (!string.IsNullOrEmpty(searchString))
             {
@@ -29,7 +29,30 @@ namespace lab04.Controllers
                 ViewBag.SearchString = searchString; 
             }
 
-            int totalItems = products.Count();
+            if (categoryId.HasValue && categoryId > 0)
+            {
+                products = products.Where(p => p.CategoryId == categoryId);
+                ViewBag.CategoryId = categoryId;
+            }
+
+            if (!string.IsNullOrEmpty(sortType) && products.Any())
+            {
+                if (sortType == "min")
+                {
+                    var minPriceValue = products.Min(p => p.Price);
+                    products = products.Where(p => p.Price == minPriceValue);
+                }
+                else if (sortType == "max")
+                {
+                    var maxPriceValue = products.Max(p => p.Price);
+                    products = products.Where(p => p.Price == maxPriceValue);
+                }
+                ViewBag.SortType = sortType;
+            }
+
+            ViewBag.Categories = new SelectList(_context.Categories, "Id", "Name", categoryId);
+
+            int totalItems = products.Count(); 
             int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
 
             var pagedData = products

@@ -1,13 +1,54 @@
 ﻿@model List<Product>
 <partial name="_Notification" />
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <a asp-action="Add" class="btn btn-primary">Add Product</a>
-    <form asp-action="Index" method="get" class="d-flex">
-        <input type="text" name="searchString" value="@ViewBag.SearchString" class="form-control me-2" placeholder="Tìm tên sản phẩm...">
-        <button type="submit" class="btn btn-outline-secondary">Tìm</button>
-        <a asp-action="Index" class="btn btn-outline-danger ms-1">X</a>
-    </form>
+<div class="card mb-3">
+    <div class="card-body">
+        <form asp-action="Index" method="get">
+            <div class="row g-3 align-items-end">
+                <!-- Nhập tên -->
+                <div class="col-md-3">
+                    <label class="form-label">Tên sản phẩm</label>
+                    <input type="text" name="searchString" value="@ViewBag.SearchString" class="form-control" placeholder="Nhập tên...">
+                </div>
+                <!-- Chọn danh mục -->
+                <div class="col-md-3">
+                    <label class="form-label">Danh mục</label>
+                    <select name="categoryId" class="form-select" asp-items="ViewBag.Categories">
+                        <option value="">-- Tất cả danh mục --</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-search"></i> Tìm kiếm
+                    </button>
+                </div>
+                <div class="col-md-3">
+
+                    <a href="@Url.Action("Index", "Product", new { searchString = ViewBag.SearchString, categoryId = ViewBag.CategoryId, sortType = "min" })"
+                       class="btn @(ViewBag.SortType == "min" ? "btn-success" : "btn-outline-success") w-100">
+                        <i class="bi bi-arrow-down-circle"></i> Xem SP Giá Thấp Nhất
+                    </a>
+                </div>
+
+                <div class="col-md-3">
+                    <a href="@Url.Action("Index", "Product", new { searchString = ViewBag.SearchString, categoryId = ViewBag.CategoryId, sortType = "max" })"
+                       class="btn @(ViewBag.SortType == "max" ? "btn-danger" : "btn-outline-danger") w-100">
+                        <i class="bi bi-arrow-up-circle"></i> Xem SP Giá Cao Nhất
+                    </a>
+                </div>
+
+                @if (!string.IsNullOrEmpty(ViewBag.SortType))
+                {
+                    <div class="col-md-2">
+                        <a href="@Url.Action("Index", "Product", new { searchString = ViewBag.SearchString, categoryId = ViewBag.CategoryId })" class="btn btn-secondary w-100">
+                            Xóa lọc giá
+                        </a>
+                    </div>}
+            </div>
+        </form>
+    </div>
 </div>
+
+<a asp-action="Add" class="btn btn-success mb-3">Add Product</a>
 <table class="table table-bordered table-striped">
     <tr>
         <th>Name</th>
@@ -30,29 +71,33 @@
 </table>
 @if (ViewBag.TotalPages > 1)
 {
-<nav aria-label="Page navigation">
-    <ul class="pagination justify-content-center">
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
 
-        <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
-            <a class="page-link" asp-action="Index"
-               asp-route-pageNumber="@(ViewBag.CurrentPage - 1)"
-               asp-route-searchString="@ViewBag.SearchString">Previous</a>
-        </li>
+            <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                <a class="page-link" asp-action="Index"
+                   asp-route-pageNumber="@(ViewBag.CurrentPage - 1)"
+                   asp-route-searchString="@ViewBag.SearchString">Previous</a>
+            </li>
 
-        @for (int i = 1; i <= ViewBag.TotalPages; i++)
-        {
-<li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
-    <a class="page-link" asp-action="Index"
-       asp-route-pageNumber="@i"
-       asp-route-searchString="@ViewBag.SearchString">@i</a>
-</li>}
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                    <a class="page-link" asp-action="Index"
+                       asp-route-pageNumber="@i"
+                       asp-route-searchString="@ViewBag.SearchString">@i</a>
+                </li>
+            }
 
-        <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
-            <a class="page-link" asp-action="Index"
-               asp-route-pageNumber="@(ViewBag.CurrentPage + 1)"
-               asp-route-searchString="@ViewBag.SearchString">Next</a>
-        </li>
+            <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
+                <a class="page-link" asp-action="Index"
+                   asp-route-pageNumber="@(ViewBag.CurrentPage + 1)"
+                   asp-route-searchString="@ViewBag.SearchString"
+                   asp-route-categoryId="@ViewBag.CategoryId"
+                   asp-route-minPrice="@ViewBag.MinPrice"
+                   asp-route-maxPrice="@ViewBag.MaxPrice">Next</a>
+            </li>
 
-    </ul>
-</nav>
+        </ul>
+    </nav>
 }

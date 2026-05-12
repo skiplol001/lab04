@@ -1,0 +1,19 @@
+﻿@model Category
+@{
+    var Item = Model;
+}
+<partial name="_Notification" />
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+<div class="container">
+    <h2>Sửa sản phẩm</h2>
+    <form asp-action="Edit" method="post">
+        <input type="hidden" asp-for="Id" />
+        <div class="form-group mb-3">
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Lưu sản phẩm</button>
+    </form>
+</div>
