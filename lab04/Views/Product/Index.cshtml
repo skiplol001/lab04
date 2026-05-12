@@ -21,29 +21,25 @@
                         <i class="bi bi-search"></i> Tìm kiếm
                     </button>
                 </div>
-                <div class="col-md-3">
-
-                    <a href="@Url.Action("Index", "Product", new { searchString = ViewBag.SearchString, categoryId = ViewBag.CategoryId, sortType = "min" })"
-                       class="btn @(ViewBag.SortType == "min" ? "btn-success" : "btn-outline-success") w-100">
-                        <i class="bi bi-arrow-down-circle"></i> Xem SP Giá Thấp Nhất
-                    </a>
-                </div>
-
-                <div class="col-md-3">
-                    <a href="@Url.Action("Index", "Product", new { searchString = ViewBag.SearchString, categoryId = ViewBag.CategoryId, sortType = "max" })"
-                       class="btn @(ViewBag.SortType == "max" ? "btn-danger" : "btn-outline-danger") w-100">
-                        <i class="bi bi-arrow-up-circle"></i> Xem SP Giá Cao Nhất
-                    </a>
-                </div>
-
-                @if (!string.IsNullOrEmpty(ViewBag.SortType))
-                {
-                    <div class="col-md-2">
-                        <a href="@Url.Action("Index", "Product", new { searchString = ViewBag.SearchString, categoryId = ViewBag.CategoryId })" class="btn btn-secondary w-100">
-                            Xóa lọc giá
-                        </a>
-                    </div>}
             </div>
+            <div class="col-md-4">
+                <a href="@Url.Action("Index", "Product", new { searchString = ViewBag.SearchString, categoryId = ViewBag.CategoryId, sortType = "min" })"
+                   class="btn @(ViewBag.SortType == "min" ? "btn-success" : "btn-outline-success") w-100">
+                    <i class="bi bi-arrow-down-circle"></i> Xem SP Giá Thấp Nhất
+                </a>
+                <a href="@Url.Action("Index", "Product", new { searchString = ViewBag.SearchString, categoryId = ViewBag.CategoryId, sortType = "max" })"
+                   class="btn @(ViewBag.SortType == "max" ? "btn-danger" : "btn-outline-danger") w-100">
+                    <i class="bi bi-arrow-up-circle"></i> Xem SP Giá Cao Nhất
+                </a>
+            </div>
+
+            @if (!string.IsNullOrEmpty(ViewBag.SortType))
+            {
+                <div class="col-md-2">
+                    <a href="@Url.Action("Index", "Product", new { searchString = ViewBag.SearchString, categoryId = ViewBag.CategoryId })" class="btn btn-secondary w-100">
+                        Xóa lọc giá
+                    </a>
+                </div>}
         </form>
     </div>
 </div>
